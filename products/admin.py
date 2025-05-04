@@ -1,6 +1,6 @@
 from django.contrib import admin
 from django.utils.html import format_html
-from .models import Product, ProductImage, ProductSpecification, SpecificationType
+from .models import Product, ProductImage, ProductSpecification, SpecificationType, Review, ReviewImage
 
 class ProductImageInline(admin.TabularInline):
     model = ProductImage
@@ -91,3 +91,25 @@ class ProductSpecificationAdmin(admin.ModelAdmin):
     list_filter = ('name', 'is_highlighted')
     search_fields = ('product__name', 'name', 'value')
     list_editable = ('is_highlighted', 'display_order')
+
+
+class ReviewImageInline(admin.TabularInline):
+    model = ReviewImage
+    extra = 1
+
+
+@admin.register(Review)
+class ReviewAdmin(admin.ModelAdmin):
+    list_display = ('id', 'product', 'author_name', 'rating_stars', 'title', 'created_at', 'is_verified', 'is_approved')
+    list_filter = ('rating', 'is_verified', 'is_approved', 'created_at')
+    search_fields = ('product__name', 'author_name', 'author_email', 'title', 'comment')
+    list_editable = ('is_verified', 'is_approved')
+    readonly_fields = ('created_at', 'updated_at')
+    inlines = [ReviewImageInline]
+    list_per_page = 20
+    
+    def rating_stars(self, obj):
+        stars = '★' * obj.rating + '☆' * (5 - obj.rating)
+        return format_html('<span style="color: #FFD700;">{}</span>', stars)
+    rating_stars.short_description = 'Note'
+    rating_stars.admin_order_field = 'rating'

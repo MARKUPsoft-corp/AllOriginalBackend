@@ -2,12 +2,12 @@ from rest_framework import viewsets, filters, permissions, status
 from rest_framework.decorators import action
 from rest_framework.response import Response
 from rest_framework.parsers import MultiPartParser, FormParser
-from django.db.models import Q
-from .models import Product, ProductImage, ProductSpecification
+from django.db.models import Q, Avg, Count
+from .models import Product, ProductImage, ProductSpecification, Review
 from .serializers import (
     ProductListSerializer, ProductDetailSerializer, 
     ProductCreateSerializer, ProductImageSerializer,
-    ProductSpecificationSerializer
+    ProductSpecificationSerializer, ReviewSerializer, ReviewSummarySerializer
 )
 
 class ProductViewSet(viewsets.ModelViewSet):
@@ -67,6 +67,41 @@ class ProductViewSet(viewsets.ModelViewSet):
             
         return queryset
     
+    @action(detail=True, methods=['get'])
+    def reviews(self, request, slug=None):
+        """Récupérer tous les avis pour un produit"""
+        product = self.get_object()
+        # Ne retourner que les avis approuvés
+        reviews = product.reviews.filter(is_approved=True).order_by('-created_at')
+        
+        # Calculer les statistiques d'avis
+        reviews_count = reviews.count()
+        avg_rating = reviews.aggregate(avg=Avg('rating'))['avg'] or 0
+        rating_distribution = {}
+        for i in range(1, 6):
+            rating_distribution[i] = reviews.filter(rating=i).count()
+        
+        # Paginer les résultats
+        page = self.paginate_queryset(reviews)
+        if page is not None:
+            serializer = ReviewSummarySerializer(page, many=True)
+            response_data = {
+                'reviews': self.get_paginated_response(serializer.data).data,
+                'count': reviews_count,
+                'avg_rating': round(avg_rating, 1),
+                'rating_distribution': rating_distribution
+            }
+            return Response(response_data)
+        
+        serializer = ReviewSummarySerializer(reviews, many=True)
+        response_data = {
+            'reviews': serializer.data,
+            'count': reviews_count,
+            'avg_rating': round(avg_rating, 1),
+            'rating_distribution': rating_distribution
+        }
+        return Response(response_data)
+
     @action(detail=True, methods=['post'], parser_classes=[MultiPartParser, FormParser])
     def add_image(self, request, slug=None):
         """

@@ -1,5 +1,5 @@
 from rest_framework import serializers
-from .models import Product, ProductImage, ProductSpecification
+from .models import Product, ProductImage, ProductSpecification, Review, ReviewImage
 from categories.serializers import CategorySerializer
 
 class ProductSpecificationSerializer(serializers.ModelSerializer):
@@ -84,3 +84,31 @@ class ProductCreateSerializer(serializers.ModelSerializer):
         fields = ['id', 'name', 'slug', 'description', 'brand', 'model',
                  'price', 'discounted_price', 'old_price', 'promo',
                  'category', 'stock', 'status', 'in_stock', 'is_featured', 'is_active']
+
+
+class ReviewImageSerializer(serializers.ModelSerializer):
+    """Sérialiseur pour les images d'avis"""
+    
+    class Meta:
+        model = ReviewImage
+        fields = ['id', 'image', 'caption']
+
+
+class ReviewSerializer(serializers.ModelSerializer):
+    """Sérialiseur pour les avis clients"""
+    images = ReviewImageSerializer(many=True, read_only=True)
+    
+    class Meta:
+        model = Review
+        fields = ['id', 'product', 'author_name', 'author_email', 'rating', 
+                 'title', 'comment', 'is_verified', 'created_at', 'images']
+        read_only_fields = ['is_verified', 'created_at']
+
+
+class ReviewSummarySerializer(serializers.ModelSerializer):
+    """Sérialiseur simplifié pour les résumés d'avis"""
+    
+    class Meta:
+        model = Review
+        fields = ['id', 'author_name', 'rating', 'title', 'comment', 'is_verified', 'created_at']
+        read_only_fields = ['is_verified', 'created_at']
