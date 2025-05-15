@@ -25,7 +25,7 @@ SECRET_KEY = 'django-insecure-d-fm1q-ow8d*@pb1%+zza2=k5l!5_@a$&$$w+e0)-an=h&pw_s
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = ['localhost', '127.0.0.1', '10.15.102.221', '*']
 
 
 # Application definition
@@ -68,7 +68,12 @@ CORS_ALLOWED_ORIGINS = [
     "http://127.0.0.1:8000",
     "http://localhost:8001",  # Port actuellement utilisé pour le backend
     "http://127.0.0.1:8001",
+    "http://10.15.102.221:3000",  # Frontend Nuxt sur le réseau
+    "http://10.15.102.221:3001",  # Port alternatif possible
 ]
+
+# Activer ceci en mode développement pour accepter toutes les origines
+CORS_ALLOW_ALL_ORIGINS = True
 
 CORS_ALLOW_CREDENTIALS = True
 
