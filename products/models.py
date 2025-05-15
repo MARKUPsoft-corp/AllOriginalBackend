@@ -26,8 +26,7 @@ class Product(models.Model):
     price = models.DecimalField(max_digits=10, decimal_places=2, verbose_name="Prix actuel")
     original_price = models.DecimalField(max_digits=10, decimal_places=2, null=True, blank=True, verbose_name="Prix original")
     
-    # Stock et disponibilité
-    stock = models.PositiveIntegerField(default=0, verbose_name="Stock")
+    # Disponibilité
     status = models.CharField(max_length=20, choices=STATUS_CHOICES, default='in_stock', verbose_name="Statut")
     
     # Options
@@ -69,7 +68,7 @@ class Product(models.Model):
     @property
     def in_stock(self):
         """Indique si le produit est en stock"""
-        return self.status in ['in_stock', 'low_stock'] and self.stock > 0
+        return self.status == 'in_stock'
 
 class ProductImage(models.Model):
     product = models.ForeignKey(Product, on_delete=models.CASCADE, related_name='images', verbose_name="Produit")

@@ -40,12 +40,10 @@ class ProductAdmin(admin.ModelAdmin):
     
     def stock_status(self, obj):
         if obj.in_stock:
-            if obj.status == 'low_stock':
-                return format_html('<span style="color: orange;">⚠️ Stock faible ({0})</span>', obj.stock)
-            return format_html('<span style="color: green;">✓ En stock ({0})</span>', obj.stock)
+            return format_html('<span style="color: green;">✓ En stock</span>')
         return format_html('<span style="color: red;">✗ Indisponible</span>')
-    stock_status.short_description = "Stock"
-    stock_status.admin_order_field = 'stock'
+    stock_status.short_description = "Disponibilité"
+    stock_status.admin_order_field = 'status'
     
     fieldsets = (
         (None, {
@@ -58,9 +56,9 @@ class ProductAdmin(admin.ModelAdmin):
             'fields': ('price', 'original_price'),
             'description': 'Si le prix original est supérieur au prix actuel, le produit est considéré comme en promotion.'
         }),
-        ('Stock et disponibilité', {
-            'fields': ('stock', 'status'),
-            'description': 'Le statut "En stock" ou "Stock faible" et un stock supérieur à 0 indique que le produit est disponible.'
+        ('Disponibilité', {
+            'fields': ('status',),
+            'description': 'Le statut "En stock" indique que le produit est disponible.'
         }),
         ('Options', {
             'fields': ('is_featured', 'is_active')

@@ -60,7 +60,7 @@ class ProductDetailSerializer(serializers.ModelSerializer):
         model = Product
         fields = ['id', 'name', 'slug', 'description', 'brand', 'model', 
                  'price', 'discounted_price', 'old_price', 'promo',
-                 'category', 'stock', 'status', 'in_stock', 'is_featured', 'is_active',
+                 'category', 'status', 'in_stock', 'is_featured', 'is_active',
                  'created_at', 'updated_at', 'images', 'primary_image', 'specifications', 'specs']
     
     def get_primary_image(self, obj):
@@ -83,7 +83,7 @@ class ProductCreateSerializer(serializers.ModelSerializer):
         model = Product
         fields = ['id', 'name', 'slug', 'description', 'brand', 'model',
                  'price', 'discounted_price', 'old_price', 'promo',
-                 'category', 'stock', 'status', 'in_stock', 'is_featured', 'is_active']
+                 'category', 'status', 'in_stock', 'is_featured', 'is_active']
 
 
 class ReviewImageSerializer(serializers.ModelSerializer):
