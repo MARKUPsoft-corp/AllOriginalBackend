@@ -4,9 +4,9 @@ services:
     name: alloriginal-backend
     env: docker
     dockerfilePath: ./Dockerfile
-    plan: starter
-    # Ajustez en fonction de vos besoins pour un plan payant
-    # plan: standard
+    plan: free
+    # Plan gratuit de Render (limité en ressources)
+    # Pour plus de ressources, utiliser starter ou standard
     buildCommand: echo "Build inclus dans le Dockerfile"
     startCommand: ""
     envVars:
@@ -44,5 +44,5 @@ services:
 # Base de données PostgreSQL
 databases:
   - name: alloriginal-db
-    plan: starter # Adaptez selon vos besoins
+    plan: free # Plan gratuit de Render
     databaseName: alloriginal_db
