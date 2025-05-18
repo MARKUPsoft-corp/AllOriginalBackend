@@ -15,11 +15,13 @@ Including another URLconf
     2. Add a URL to urlpatterns:  path('blog/', include('blog.urls'))
 """
 from django.contrib import admin
-from django.urls import path, include
+from django.urls import path, include, re_path
 from django.conf import settings
 from django.conf.urls.static import static
+from django.http import HttpResponseNotFound
 from rest_framework import permissions
 from rest_framework.documentation import include_docs_urls
+from .media_serve import serve_media_file
 
 urlpatterns = [
     path('admin/', admin.site.urls),
@@ -31,9 +33,14 @@ urlpatterns = [
     
     # API documentation
     path('api/docs/', include_docs_urls(title='AllOriginal API', permission_classes=[permissions.AllowAny])),
+    
+    # Servir les fichiers médias avec notre fonction personnalisée
+    re_path(r'^media/(?P<path>.*)$', serve_media_file, name='serve_media'),
 ]
 
-# En mode développement, servir les medias et fichiers statiques
+# Garder cette ligne en commentaire comme référence
+# urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
+
+# Servir les fichiers statiques uniquement en mode développement
 if settings.DEBUG:
-    urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
     urlpatterns += static(settings.STATIC_URL, document_root=settings.STATIC_ROOT)

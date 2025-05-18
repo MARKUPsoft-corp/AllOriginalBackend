@@ -69,6 +69,11 @@ CORS_ALLOW_ALL_ORIGINS = os.environ.get('CORS_ALLOW_ALL_ORIGINS', 'False').lower
 
 CORS_ALLOW_CREDENTIALS = True
 
+# Configuration supplémentaire pour les fichiers média
+CORS_ALLOW_METHODS = ['GET', 'POST', 'PUT', 'PATCH', 'DELETE', 'OPTIONS']
+CORS_ALLOW_HEADERS = ['*']
+CORS_EXPOSE_HEADERS = ['Content-Disposition']
+
 ROOT_URLCONF = 'alloriginal_backend.urls'
 
 TEMPLATES = [
