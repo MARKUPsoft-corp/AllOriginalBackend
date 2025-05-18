@@ -41,15 +41,20 @@ fi
 # Créer un superutilisateur si demandé et s'il n'existe pas déjà
 if [ "$CREATE_SUPERUSER" = "true" ]; then
   echo "Vérification du superutilisateur..."
-  python manage.py shell -c "\
-  from django.contrib.auth import get_user_model;\
-  User = get_user_model();\
-  if not User.objects.filter(email='$SUPERUSER_EMAIL').exists():\
-    User.objects.create_superuser('$SUPERUSER_EMAIL', '$SUPERUSER_PASSWORD');\
-    print('Superutilisateur créé avec succès.');\
-  else:\
-    print('Le superutilisateur existe déjà.');\
-  "
+  # Création d'un script Python temporaire pour éviter les problèmes d'indentation
+  cat > /tmp/create_superuser.py << EOF
+from django.contrib.auth import get_user_model
+User = get_user_model()
+if not User.objects.filter(email='$SUPERUSER_EMAIL').exists():
+    User.objects.create_superuser('$SUPERUSER_EMAIL', '$SUPERUSER_PASSWORD')
+    print('Superutilisateur créé avec succès.')
+else:
+    print('Le superutilisateur existe déjà.')
+EOF
+  # Exécution du script
+  python manage.py shell < /tmp/create_superuser.py
+  # Suppression du script temporaire
+  rm /tmp/create_superuser.py
   echo "Vérification du superutilisateur terminée."
 fi
 
