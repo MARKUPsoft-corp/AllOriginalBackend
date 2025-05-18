@@ -38,6 +38,21 @@ if [ "$APPLY_MIGRATIONS" = "true" ]; then
   python manage.py migrate
 fi
 
+# Créer un superutilisateur si demandé et s'il n'existe pas déjà
+if [ "$CREATE_SUPERUSER" = "true" ]; then
+  echo "Vérification du superutilisateur..."
+  python manage.py shell -c "\
+  from django.contrib.auth import get_user_model;\
+  User = get_user_model();\
+  if not User.objects.filter(email='$SUPERUSER_EMAIL').exists():\
+    User.objects.create_superuser('$SUPERUSER_EMAIL', '$SUPERUSER_PASSWORD');\
+    print('Superutilisateur créé avec succès.');\
+  else:\
+    print('Le superutilisateur existe déjà.');\
+  "
+  echo "Vérification du superutilisateur terminée."
+fi
+
 # Démarrer l'application
 if [ "$DEBUG" = "true" ]; then
   echo "Démarrage du serveur de développement..."
