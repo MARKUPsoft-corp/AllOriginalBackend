@@ -1,0 +1,2 @@
+id,password,last_login,is_superuser,email,first_name,last_name,is_active,is_staff,date_joined
+2,pbkdf2_sha256$1000000$81pMcdtRBZ6mzz7gl9cJsj$DU8DbuW5HLeZPkogTSBa22zdRMkt04C/tqjTiAAoHkM=,"2025-05-17 10:11:41.180075",1,emmanuelyakam@gmail.com,"","",1,1,"2025-05-15 13:10:18.750345"

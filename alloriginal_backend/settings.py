@@ -10,6 +10,7 @@ For the full list of settings and their values, see
 https://docs.djangoproject.com/en/5.2/ref/settings/
 """
 
+import os
 from pathlib import Path
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
@@ -20,12 +21,12 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 # See https://docs.djangoproject.com/en/5.2/howto/deployment/checklist/
 
 # SECURITY WARNING: keep the secret key used in production secret!
-SECRET_KEY = 'django-insecure-d-fm1q-ow8d*@pb1%+zza2=k5l!5_@a$&$$w+e0)-an=h&pw_s'
+SECRET_KEY = os.environ.get('SECRET_KEY', 'django-insecure-d-fm1q-ow8d*@pb1%+zza2=k5l!5_@a$&$$w+e0)-an=h&pw_s')
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = True
+DEBUG = os.environ.get('DEBUG', 'True').lower() == 'true'
 
-ALLOWED_HOSTS = ['localhost', '127.0.0.1', '10.15.102.221', '*']
+ALLOWED_HOSTS = os.environ.get('ALLOWED_HOSTS', 'localhost,127.0.0.1').split(',')
 
 
 # Application definition
@@ -61,19 +62,10 @@ MIDDLEWARE = [
 ]
 
 # Configuration CORS
-CORS_ALLOWED_ORIGINS = [
-    "http://localhost:3000",  # Frontend Nuxt en développement
-    "http://127.0.0.1:3000",
-    "http://localhost:8000",  # Autres ports possibles pour le développement
-    "http://127.0.0.1:8000",
-    "http://localhost:8001",  # Port actuellement utilisé pour le backend
-    "http://127.0.0.1:8001",
-    "http://10.15.102.221:3000",  # Frontend Nuxt sur le réseau
-    "http://10.15.102.221:3001",  # Port alternatif possible
-]
+CORS_ALLOWED_ORIGINS = os.environ.get('CORS_ALLOWED_ORIGINS', 'http://localhost:3000,http://127.0.0.1:3000').split(',')
 
 # Activer ceci en mode développement pour accepter toutes les origines
-CORS_ALLOW_ALL_ORIGINS = True
+CORS_ALLOW_ALL_ORIGINS = os.environ.get('CORS_ALLOW_ALL_ORIGINS', 'False').lower() == 'true'
 
 CORS_ALLOW_CREDENTIALS = True
 
@@ -102,8 +94,12 @@ WSGI_APPLICATION = 'alloriginal_backend.wsgi.application'
 
 DATABASES = {
     'default': {
-        'ENGINE': 'django.db.backends.sqlite3',
-        'NAME': BASE_DIR / 'db.sqlite3',
+        'ENGINE': 'django.db.backends.postgresql',
+        'NAME': os.environ.get('DB_NAME', 'alloriginal_db'),
+        'USER': os.environ.get('DB_USER', 'alloriginal'),
+        'PASSWORD': os.environ.get('DB_PASSWORD', 'alloriginal_password'),
+        'HOST': os.environ.get('DB_HOST', 'localhost'),
+        'PORT': os.environ.get('DB_PORT', '5432'),
     }
 }
 
@@ -142,12 +138,17 @@ USE_TZ = True
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/5.2/howto/static-files/
 
-STATIC_URL = 'static/'
+STATIC_URL = '/static/'
 STATIC_ROOT = BASE_DIR / 'staticfiles'
 
 # Media files (Uploads)
-MEDIA_URL = 'media/'
+MEDIA_URL = '/media/'
 MEDIA_ROOT = BASE_DIR / 'media'
+
+# Si nous sommes sur Render, configurons whitenoise
+if not DEBUG:
+    MIDDLEWARE.insert(1, 'whitenoise.middleware.WhiteNoiseMiddleware')
+    STATICFILES_STORAGE = 'whitenoise.storage.CompressedManifestStaticFilesStorage'
 
 # Configuration REST Framework
 REST_FRAMEWORK = {

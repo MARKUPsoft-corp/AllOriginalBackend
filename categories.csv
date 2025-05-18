@@ -1,0 +1,4 @@
+id,name,slug,description,icon,icon_description,is_active,created_at,updated_at
+1,Smartphone,smartphone,"ici les smartphones les plus haut de gamme",smartphone,phone,1,"2025-05-04 12:45:04.657223","2025-05-04 12:45:04.657253"
+2,Tablettes,tablettes,"Les dernières tablettes",smartphone,smartphone,1,"2025-05-04 14:24:45.723611","2025-05-04 15:13:04.753854"
+3,Accessoires,accessoire,"De jolies accessoires pour vos appareils",son,son,1,"2025-05-04 15:11:44.450370","2025-05-04 15:13:34.011375"

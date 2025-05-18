@@ -1,0 +1,20 @@
+id,product_id,name,value,is_highlighted,display_order
+3,2,RAM,16Go,1,0
+4,2,ROM,512Go,1,0
+5,2,Processeur,A16,1,0
+6,2,Ecran,Oled,1,0
+7,3,RAM,16Go,1,0
+8,3,ROM,512Go,1,0
+9,3,Processeur,A16,1,0
+10,3,Ecran,Oled,1,0
+11,4,RAM,12Go,1,0
+12,4,ROM,128Go,1,0
+13,4,Ecran,OLED,1,0
+14,4,CPU,"G Tensor G2",1,0
+21,9,ROM,128Go,1,0
+22,9,Processeur,"Snapdragon 766",1,0
+23,9,RAM,8Go,1,0
+24,9,Ecran,OLED,1,0
+25,10,RAM,12Go,1,0
+26,10,ROM,256Go,1,0
+27,10,Processeur,"Snapdragon 888",1,0
