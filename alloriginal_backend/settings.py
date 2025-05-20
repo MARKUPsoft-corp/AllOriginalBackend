@@ -150,15 +150,18 @@ STATIC_ROOT = BASE_DIR / 'staticfiles'
 MEDIA_URL = '/media/'
 MEDIA_ROOT = BASE_DIR / 'media'
 
-# Cloudinary configuration
+# Cloudinary configuration - utilise uniquement les variables d'environnement
 CLOUDINARY_STORAGE = {
     'CLOUD_NAME': os.environ.get('CLOUDINARY_CLOUD_NAME', ''),
     'API_KEY': os.environ.get('CLOUDINARY_API_KEY', ''),
     'API_SECRET': os.environ.get('CLOUDINARY_API_SECRET', ''),
 }
 
-# N'activer Cloudinary que si tous les paramètres sont configurés
-if all(CLOUDINARY_STORAGE.values()):
+# Vérification des identifiants Cloudinary via les variables d'environnement
+CLOUDINARY_CONFIGURED = all(CLOUDINARY_STORAGE.values())
+
+# Activer Cloudinary si configuré
+if CLOUDINARY_CONFIGURED:
     # Ajouter l'app à INSTALLED_APPS
     INSTALLED_APPS.extend([
         'cloudinary',

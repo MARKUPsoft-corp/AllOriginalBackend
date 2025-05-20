@@ -4,6 +4,13 @@ from django.utils.text import slugify
 from django.core.validators import MinValueValidator, MaxValueValidator
 from categories.models import Category
 
+# Import Cloudinary si disponible
+try:
+    from cloudinary.models import CloudinaryField
+    CLOUDINARY_AVAILABLE = True
+except ImportError:
+    CLOUDINARY_AVAILABLE = False
+
 class Product(models.Model):
     STATUS_CHOICES = [
         ('in_stock', 'En stock'),
@@ -72,7 +79,11 @@ class Product(models.Model):
 
 class ProductImage(models.Model):
     product = models.ForeignKey(Product, on_delete=models.CASCADE, related_name='images', verbose_name="Produit")
-    image = models.ImageField(upload_to='products/', verbose_name="Image")
+    # Utiliser CloudinaryField si disponible, sinon ImageField standard
+    if CLOUDINARY_AVAILABLE:
+        image = CloudinaryField('image', folder='alloriginal/products', resource_type='image', verbose_name="Image")
+    else:
+        image = models.ImageField(upload_to='products/', verbose_name="Image")
     is_primary = models.BooleanField(default=False, verbose_name="Image principale")
     alt_text = models.CharField(max_length=100, blank=True, verbose_name="Texte alternatif")
     created_at = models.DateTimeField(auto_now_add=True, verbose_name="Date de création")
