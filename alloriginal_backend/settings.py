@@ -150,6 +150,38 @@ STATIC_ROOT = BASE_DIR / 'staticfiles'
 MEDIA_URL = '/media/'
 MEDIA_ROOT = BASE_DIR / 'media'
 
+# Cloudinary configuration
+CLOUDINARY_STORAGE = {
+    'CLOUD_NAME': os.environ.get('CLOUDINARY_CLOUD_NAME', ''),
+    'API_KEY': os.environ.get('CLOUDINARY_API_KEY', ''),
+    'API_SECRET': os.environ.get('CLOUDINARY_API_SECRET', ''),
+}
+
+# N'activer Cloudinary que si tous les paramètres sont configurés
+if all(CLOUDINARY_STORAGE.values()):
+    # Ajouter l'app à INSTALLED_APPS
+    INSTALLED_APPS.extend([
+        'cloudinary',
+        'cloudinary_storage',
+    ])
+    
+    # Configurer Cloudinary comme stockage de médias par défaut
+    DEFAULT_FILE_STORAGE = 'cloudinary_storage.storage.MediaCloudinaryStorage'
+    
+    # Sous-dossier dans Cloudinary pour les médias (optionnel)
+    CLOUDINARY_STORAGE.update({
+        'PREFIX': 'alloriginal/media',  # Préfixe pour tous les fichiers
+        'STATICFILES_MANIFEST_ROOT': BASE_DIR / 'staticfiles',
+    })
+
+    # Définir les transformations par défaut pour les images (optionnel)
+    CLOUDINARY_STORAGE.update({
+        'FILENAME_GENERATOR': 'cloudinary_storage.utils.get_random_filename',
+        'TRANSFORMATIONS': {
+            'image': {'quality': 'auto:good', 'fetch_format': 'auto'}
+        }
+    })
+
 # Si nous sommes sur Render, configurons whitenoise
 if not DEBUG:
     MIDDLEWARE.insert(1, 'whitenoise.middleware.WhiteNoiseMiddleware')
