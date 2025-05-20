@@ -81,7 +81,8 @@ class ProductImage(models.Model):
     product = models.ForeignKey(Product, on_delete=models.CASCADE, related_name='images', verbose_name="Produit")
     # Utiliser CloudinaryField si disponible, sinon ImageField standard
     if CLOUDINARY_AVAILABLE:
-        image = CloudinaryField('image', folder='alloriginal/products', resource_type='image', verbose_name="Image")
+        # Premier argument est le nom interne et non le verbose_name
+        image = CloudinaryField(verbose_name="Image", folder='alloriginal/products', resource_type='image')
     else:
         image = models.ImageField(upload_to='products/', verbose_name="Image")
     is_primary = models.BooleanField(default=False, verbose_name="Image principale")
