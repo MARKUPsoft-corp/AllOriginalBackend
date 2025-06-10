@@ -74,6 +74,13 @@ CORS_ALLOW_METHODS = ['GET', 'POST', 'PUT', 'PATCH', 'DELETE', 'OPTIONS']
 CORS_ALLOW_HEADERS = ['*']
 CORS_EXPOSE_HEADERS = ['Content-Disposition']
 
+# Configuration CSRF pour fonctionner avec HTTPS
+CSRF_COOKIE_SECURE = not DEBUG  # Utiliser seulement HTTPS en production
+CSRF_COOKIE_HTTPONLY = True  # Protection supplémentaire
+CSRF_TRUSTED_ORIGINS = os.environ.get('CSRF_TRUSTED_ORIGINS', 
+                                     'https://alloriginal-backend.onrender.com').split(',')
+SESSION_COOKIE_SECURE = not DEBUG
+
 ROOT_URLCONF = 'alloriginal_backend.urls'
 
 TEMPLATES = [
