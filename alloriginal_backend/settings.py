@@ -62,7 +62,7 @@ MIDDLEWARE = [
 ]
 
 # Configuration CORS
-CORS_ALLOWED_ORIGINS = os.environ.get('CORS_ALLOWED_ORIGINS', 'http://localhost:3000,http://127.0.0.1:3000').split(',')
+CORS_ALLOWED_ORIGINS = os.environ.get('CORS_ALLOWED_ORIGINS', 'http://alloriginal-shop.com, http://www.alloriginal-shop.com').split(',')
 
 # Activer ceci en mode développement pour accepter toutes les origines
 CORS_ALLOW_ALL_ORIGINS = os.environ.get('CORS_ALLOW_ALL_ORIGINS', 'False').lower() == 'true'
